@@ -216,3 +216,13 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# DeepVoiceDive — keep personal audio, profiles and outputs out of git
+*.wav
+*.flac
+*.mp3
+*.m4a
+results/
+pretrained_models/
+voice_profile.json
+*_profile.json

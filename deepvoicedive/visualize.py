@@ -63,3 +63,38 @@ def render_similarity_matrix(labels, matrix, out_path):
     fig.savefig(str(out_path), dpi=120)
     plt.close(fig)
     return out_path
+
+
+def render_screening(results, out_path, threshold=75.0):
+    """Render screening results as a green (pass) / red (fail) suitability bar chart.
+
+    ``results`` is the list of dicts from :func:`deepvoicedive.screen.screen_candidates`
+    (already sorted best-first).
+    """
+    # Plot best at the top: reverse so the highest bar sits on top of a barh.
+    rows = list(reversed(results))
+    names = [r["name"] for r in rows]
+    values = [r["suitability"] for r in rows]
+    colours = ["tab:green" if r["verdict"] else "tab:red" for r in rows]
+
+    fig, ax = plt.subplots(figsize=(9, 1.2 + 0.6 * max(len(rows), 1)))
+    bars = ax.barh(range(len(rows)), values, color=colours)
+    ax.set_yticks(range(len(rows)))
+    ax.set_yticklabels(names)
+    ax.set_xlim(0, 100)
+    ax.set_xlabel("Eignung (%)")
+    ax.set_title("Voice-Swap-Screening")
+    ax.axvline(threshold, color="black", linestyle="--", linewidth=1)
+    ax.text(threshold, len(rows) - 0.4, f" Schwelle {threshold:.0f}%",
+            va="top", ha="left", fontsize=8)
+
+    for i, (bar, r) in enumerate(zip(bars, rows)):
+        # ✓/✗ (U+2713/U+2717) render in matplotlib's default font; emoji do not.
+        mark = "✓" if r["verdict"] else "✗"
+        ax.text(bar.get_width() + 1, i, f"{r['suitability']:.0f}%  {mark}",
+                va="center", ha="left", fontsize=9)
+
+    fig.tight_layout()
+    fig.savefig(str(out_path), dpi=120)
+    plt.close(fig)
+    return out_path
