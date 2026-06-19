@@ -37,3 +37,29 @@ def render_report(y, sr, out_path):
     fig.savefig(str(out_path), dpi=120)
     plt.close(fig)
     return out_path
+
+
+def render_similarity_matrix(labels, matrix, out_path):
+    """Render an all-pairs Voice Match matrix as an annotated heatmap."""
+    n = len(labels)
+    fig, ax = plt.subplots(figsize=(1.5 + 1.1 * n, 1.5 + 1.1 * n))
+
+    im = ax.imshow(matrix, vmin=0, vmax=100, cmap="viridis")
+    ax.set_xticks(range(n))
+    ax.set_xticklabels(labels, rotation=45, ha="right")
+    ax.set_yticks(range(n))
+    ax.set_yticklabels(labels)
+
+    # Annotate each cell with its percentage; pick a readable text colour.
+    for i in range(n):
+        for j in range(n):
+            value = matrix[i, j]
+            colour = "white" if value < 50 else "black"
+            ax.text(j, i, f"{value:.0f}", ha="center", va="center", color=colour)
+
+    ax.set_title("Voice Match (%)")
+    fig.colorbar(im, ax=ax, label="Match %")
+    fig.tight_layout()
+    fig.savefig(str(out_path), dpi=120)
+    plt.close(fig)
+    return out_path

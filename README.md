@@ -73,13 +73,32 @@ Kosinus-Distanz : 0.0123
 Voice Match     : 98.77 %
 ```
 
+### Compare many recordings at once
+
+```bash
+deepvoicedive matrix rec1.wav rec2.wav rec3.wav --output-dir results/
+```
+
+Computes the **all-pairs Voice Match** between every recording and writes:
+
+| File                     | Contents                                            |
+| ------------------------ | --------------------------------------------------- |
+| `similarity_matrix.csv`  | N×N table of match percentages                      |
+| `similarity_matrix.png`  | Annotated heatmap of the same matrix                |
+
+The matrix is symmetric and its diagonal is 100 % (every recording matches
+itself). High values off the diagonal mark recordings that likely come from the
+same voice — handy for grouping several takes or checking voice stability across
+days.
+
 ## Use as a library
 
 ```python
-from deepvoicedive import embedding_from_file, compare_files
+from deepvoicedive import embedding_from_file, compare_files, similarity_matrix
 
 emb = embedding_from_file("my_voice.wav")        # 40-dim numpy array
 dist, similarity, match = compare_files("a.wav", "b.wav")
+labels, matrix = similarity_matrix(["a.wav", "b.wav", "c.wav"])  # all-pairs %
 ```
 
 ## How the metrics work

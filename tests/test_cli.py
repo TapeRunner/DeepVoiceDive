@@ -17,6 +17,17 @@ def test_compare_cli(tone_a, tone_a_copy, capsys):
     assert "Voice Match" in out
 
 
+def test_matrix_cli_creates_artifacts(tone_a, tone_a_copy, tone_b, tmp_path):
+    out = tmp_path / "m"
+    rc = main(
+        ["matrix", str(tone_a), str(tone_a_copy), str(tone_b),
+         "--output-dir", str(out)]
+    )
+    assert rc == 0
+    assert (out / "similarity_matrix.csv").exists()
+    assert (out / "similarity_matrix.png").exists()
+
+
 def test_missing_file_returns_error(tmp_path):
     rc = main(["analyze", str(tmp_path / "nope.wav"), "--no-egemaps"])
     assert rc == 1
