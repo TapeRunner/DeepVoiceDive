@@ -35,6 +35,25 @@ def _cmd_compare(args) -> int:
     return 0
 
 
+def _cmd_matrix(args) -> int:
+    from .batch import write_similarity_report
+
+    result = write_similarity_report(args.inputs, args.output_dir)
+    labels = result["labels"]
+    matrix = result["matrix"]
+
+    print("Voice-Match-Matrix (%):")
+    header = "".join(f"{label[:10]:>12}" for label in labels)
+    print(f"{'':>12}{header}")
+    for i, label in enumerate(labels):
+        row = "".join(f"{matrix[i, j]:>12.2f}" for j in range(len(labels)))
+        print(f"{label[:10]:>12}{row}")
+
+    print(f"\nTabelle  : {result['csv']}")
+    print(f"Heatmap  : {result['png']}")
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="deepvoicedive",
@@ -65,6 +84,20 @@ def build_parser() -> argparse.ArgumentParser:
     compare.add_argument("file_a", help="First WAV file.")
     compare.add_argument("file_b", help="Second WAV file.")
     compare.set_defaults(func=_cmd_compare)
+
+    matrix = sub.add_parser(
+        "matrix",
+        help="Compare many WAV recordings at once (all-pairs Voice Match).",
+    )
+    matrix.add_argument(
+        "inputs", nargs="+", help="Two or more WAV files to compare."
+    )
+    matrix.add_argument(
+        "--output-dir",
+        default="results",
+        help="Directory for the matrix table and heatmap (default: results).",
+    )
+    matrix.set_defaults(func=_cmd_matrix)
 
     return parser
 
