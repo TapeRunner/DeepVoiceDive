@@ -9,6 +9,8 @@ from .features import extract_mfcc, compute_spectrogram, N_MFCC
 from .embedding import compute_embedding, embedding_from_file, EMBEDDING_DIM
 from .compare import cosine_distance, voice_match, compare_files
 from .batch import similarity_matrix
+from .profile import build_profile, save_profile, load_profile
+from .screen import screen_candidates
 
 __version__ = "0.1.0"
 
@@ -25,5 +27,9 @@ __all__ = [
     "voice_match",
     "compare_files",
     "similarity_matrix",
+    "build_profile",
+    "save_profile",
+    "load_profile",
+    "screen_candidates",
     "__version__",
 ]

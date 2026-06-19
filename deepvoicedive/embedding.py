@@ -28,10 +28,26 @@ def compute_embedding(y, sr):
     return vec.astype(np.float64)
 
 
-def embedding_from_file(path):
-    """Load an audio file and return its voice embedding."""
-    y, sr = load_wav(path)
-    return compute_embedding(y, sr)
+def embedding_from_file(path, method: str = "mfcc"):
+    """Load an audio file and return its voice embedding.
+
+    Parameters
+    ----------
+    path:
+        Path to an audio file.
+    method:
+        ``"mfcc"`` (default) uses the offline MFCC fingerprint. ``"neural"`` uses
+        the SpeechBrain ECAPA speaker-embedding model (requires the ``neural``
+        extra; see :mod:`deepvoicedive.neural`).
+    """
+    if method == "neural":
+        from .neural import neural_embedding
+
+        return neural_embedding(path)
+    if method == "mfcc":
+        y, sr = load_wav(path)
+        return compute_embedding(y, sr)
+    raise ValueError(f"Unknown embedding method: {method!r} (use 'mfcc' or 'neural').")
 
 
 def save_embedding(vec, json_path=None, npy_path=None):
