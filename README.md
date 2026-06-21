@@ -42,6 +42,24 @@ pip install -e ".[dev]"   # + test tooling (pytest)
 
 Requires Python ≥ 3.9.
 
+## Graphical interface
+
+Prefer clicking to typing? Launch the desktop GUI — a single window with one tab
+per command (Analyse, Vergleich, Matrix, Profil, Screening):
+
+```bash
+deepvoicedive-gui
+```
+
+It sits directly on top of the library API, so it does exactly what the CLI
+does: pick files, set options, hit the button, and see the resulting tables and
+figures inline. Long-running steps (openSMILE, the neural model, plotting) run
+on a background thread so the window stays responsive.
+
+The GUI uses **Tkinter**, which ships with Python but is packaged separately on
+some Linux distributions — install it with e.g. `sudo apt install python3-tk` if
+`deepvoicedive-gui` reports it missing. No other dependencies are added.
+
 ## Usage
 
 ### Analyse a single recording

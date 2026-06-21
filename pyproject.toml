@@ -35,6 +35,7 @@ Homepage = "https://github.com/TapeRunner/DeepVoiceDive"
 
 [project.scripts]
 deepvoicedive = "deepvoicedive.cli:main"
+deepvoicedive-gui = "deepvoicedive.gui:main"
 
 [tool.setuptools.packages.find]
 include = ["deepvoicedive*"]
